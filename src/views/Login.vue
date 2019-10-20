@@ -37,17 +37,10 @@ export default {
     },
     methods: {
         login: function(){
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-                function(user){
-                    // ERREUR this is undefined a fixer pour redirection
-                    this.$router.replace('home')
-                },
-                function(err){
-                    alert('Oops. ' + err.message)
-                }
-            )
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                .then(() => this.$router.replace('home'))
+                .catch(err => alert('Oops. ' + err.message))
         },
-
     },
 }
 </script>
