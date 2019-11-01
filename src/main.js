@@ -2,11 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-// import './../node_modules/bulma/css/bulma.css'
-import 'bulma/css/bulma.css'
 import firebase from 'firebase'
+import Buefy from 'buefy'
+// import 'buefy/dist/buefy.css'
 
 import firebaseConfig from './firebaseConfig'
+
+Vue.use(Buefy);
 
 
 firebase.initializeApp(firebaseConfig);

@@ -17,7 +17,7 @@
                 </div>
                 </div>
                 
-                <button v-on:click="signUp" v-on:keyup.enter="signUp" class="button is-primary">Submit</button> 
+                <b-button type="is-success" v-on:click="signUp" v-on:keyup.enter="signUp">Submit</b-button>
             </div>
         </div>
     </div>
