@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import firebase from 'firebase'
 import Buefy from 'buefy'
-// import 'buefy/dist/buefy.css'
 
 import firebaseConfig from './firebaseConfig'
 
