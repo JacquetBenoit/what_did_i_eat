@@ -17,7 +17,7 @@
                 </div>
                 </div>
 
-                <button v-on:click="login" v-on:keyup.enter="login" class="button is-primary">Login</button> 
+                <b-button type="is-success" v-on:click="login" v-on:keyup.enter="login" class="button is-primary">Login</b-button> 
             </div>
         </div>
     </div>
