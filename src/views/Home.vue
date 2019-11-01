@@ -3,7 +3,6 @@
     <Nav/>
     <img alt="Vue logo" src="../assets/logo.png">
     <Food/>
-
   </div>
 </template>
 
