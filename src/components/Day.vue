@@ -1,17 +1,20 @@
 <template>
-    <div class="container is-centered">
-        <div class="columns is-mobile is-centered">
-            <div class="cloumn is-half ">
-                    <b-datepicker v-model="dateNow" 
-                        inline 
-                        >
+    <div class="container is-centered has-text-centered">
+        <!-- DATE PICKER -->
+        <div class="columns is-centered">
+            <div class="column">
+                    <b-datepicker size="is-small" v-model="dateNow" 
+                        inline>
                     </b-datepicker>
             </div>
-            <div class="column is-two-fifths">
+            <!-- -->
+            <!-- AUTOCOMPLETE SELECT -->
+            <div class="column is-mobile">
                 <section>
                     <p class="content"><b>Selected:</b> {{ selected }}</p>
                     <b-field label="Find or add food">
                         <b-autocomplete
+                            rounded
                             v-model="foodName"
                             ref="autocomplete"
                             :data="filteredDataArray"
@@ -19,14 +22,58 @@
                             placeholder="e.g. Orange"
                             @select="option => selected = option">
                             <template slot="header">
-                                <a @click="showAddFruit">
+                                <a @click="showAddFood">
                                     <span> Add new... </span>
                                 </a> 
                             </template>
                             <template slot="empty">No results for {{foodName}}</template>
                         </b-autocomplete>
+                        <!-- -->
+                    <!-- SELECT TIME -->
                     </b-field>
+                    <b-field label="Select time">
+                        <b-clockpicker
+                            rounded
+                            placeholder="Click to select..."
+                            icon="clock"
+                            :hour-format="format"
+                            editable>
+                        </b-clockpicker>
+                    </b-field>
+                    <b-button type="is-primary">Add to my day</b-button>
                 </section>
+            </div>
+            <!-- -->
+            <!-- TABS -->
+            <div class="column">
+                <b-tabs v-model="activeTab">
+                    <b-tab-item label="What did you eat today ?">
+                    Lorem ipsum dolor sit amet.
+                    </b-tab-item>
+
+                    <b-tab-item label="Food eaten today">
+                    Lorem <br>
+                    ipsum <br>
+                    dolor <br>
+                    sit <br>
+                    amet.
+                    </b-tab-item>
+
+                    <b-tab-item :visible="showBooks" label="Saved food">
+                        <p v-for="food in foods" v-bind:key="food.id">{{food.name}}</p>
+                    </b-tab-item>
+                </b-tabs>
+                <!-- -->
+                <!-- FEELING SELECT :'( -->
+                <b-field class="has-text-centered" label="How do you feel today ?">
+                    <b-select placeholder=":()" rounded>
+                        <option value="good">Good :)</option>
+                        <option value="ok">Ok :|</option>
+                        <option value="bad">Bad :(</option>
+                    </b-select>
+                </b-field>
+                <!-- -->
+                <b-button type="is-info">Save day</b-button>                  
             </div>
         </div>  
     </div>
@@ -36,7 +83,7 @@
 import firebase from 'firebase'
 
 export default {
-    name: 'Food',
+    name: 'Day',
     created() {
         this.getFoods();
     },
@@ -50,6 +97,7 @@ export default {
         }
     },
     methods: {
+        // ADD FOOD ITEM TO FIREBASE
         addFood() {
             firebase
             .firestore()
@@ -61,7 +109,7 @@ export default {
                 createdAt: new Date(),
             })
         },
-
+        // GET FOOD ITEMS FROM FIREBASE
         async getFoods() {
             var foodsRef = await firebase
                 .firestore()
@@ -78,7 +126,9 @@ export default {
                 })
             })
         },
-        showAddFruit() {
+
+        // SHOW MODAL AND FIELD TO ADD NEW FOOD
+        showAddFood() {
                 this.$buefy.dialog.prompt({
                     message: `Food`,
                     inputAttrs: {
@@ -96,6 +146,7 @@ export default {
         },
 
     computed: {
+        //FILTER THE FOOD ARRAY ON OBJECT NAME AND RETURN FOOD OBJECT
         filteredDataArray() {
                 return this.foods.filter((option) => {
                     return option.name
@@ -109,4 +160,13 @@ export default {
 </script>
 
 <style>
+.dropdown.is-inline .dropdown-menu {
+    display: block;
+}
+
+.control {
+    text-align: center;
+}
+
+
 </style>

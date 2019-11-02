@@ -2,6 +2,8 @@
     <div class="container">
         <div class="columns is-centered">
             <div class="column is-two-fifths">
+                <router-link to="/login">Login</router-link> |
+                <router-link to="/sign-up">Sign-up</router-link>               
                 <h2 class="has-text-weight-bold">Sign-Up</h2>
                 <div class="field">
                 <label class="label">Email</label>
