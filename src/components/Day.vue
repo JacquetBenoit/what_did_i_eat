@@ -47,16 +47,8 @@
             <!-- TABS -->
             <div class="column">
                 <b-tabs v-model="activeTab">
-                    <b-tab-item label="What did you eat today ?">
+                    <b-tab-item label="What did you eat ?">
                     Lorem ipsum dolor sit amet.
-                    </b-tab-item>
-
-                    <b-tab-item label="Food eaten today">
-                    Lorem <br>
-                    ipsum <br>
-                    dolor <br>
-                    sit <br>
-                    amet.
                     </b-tab-item>
 
                     <b-tab-item :visible="showBooks" label="Saved food">
