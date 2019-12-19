@@ -3,7 +3,7 @@
         <!-- DATE PICKER -->
         <div class="columns is-centered">
             <div class="column">
-                    <b-datepicker size="is-small" v-model="dateNow" 
+                    <b-datepicker size="is-small" v-model="date" 
                         inline>
                     </b-datepicker>
             </div>
@@ -29,15 +29,27 @@
                             <template slot="empty">No results for {{foodName}}</template>
                         </b-autocomplete>
                         <!-- -->
-                    <!-- SELECT TIME -->
+                    <!-- CLOCK PICKER -->
                     </b-field>
                     <b-field label="Select time">
                         <b-clockpicker
                             rounded
+                            v-model="time"
                             placeholder="Click to select..."
-                            icon="clock"
                             :hour-format="format"
                             editable>
+
+                            <button class="button is-primary"
+                                @click="time = new Date()">
+                                <b-icon icon="clock"></b-icon>
+                                <span>Now</span>
+                            </button>
+
+                            <button class="button is-danger"
+                                @click="time = null">
+                                <b-icon icon="close"></b-icon>
+                                <span>Clear</span>
+                            </button>
                         </b-clockpicker>
                     </b-field>
                     <b-button type="is-primary">Add to my day</b-button>
@@ -51,7 +63,7 @@
                     Lorem ipsum dolor sit amet.
                     </b-tab-item>
 
-                    <b-tab-item :visible="showBooks" label="Saved food">
+                    <b-tab-item label="Saved food">
                         <p v-for="food in foods" v-bind:key="food.id">{{food.name}}</p>
                     </b-tab-item>
                 </b-tabs>
@@ -65,7 +77,7 @@
                     </b-select>
                 </b-field>
                 <!-- -->
-                <b-button type="is-info">Save day</b-button>                  
+                <b-button type="is-primary">Save day</b-button>                  
             </div>
         </div>  
     </div>
@@ -84,7 +96,10 @@ export default {
             foodName: '',
             foods: [],
             selected: null,
-            dateNow: new Date(),
+            date: new Date(),
+            day: [],
+            days: [],
+            time: new Date(),
 
         }
     },
@@ -159,6 +174,4 @@ export default {
 .control {
     text-align: center;
 }
-
-
 </style>
