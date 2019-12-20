@@ -3,9 +3,9 @@
         <!-- DATE PICKER -->
         <div class="columns is-centered">
             <div class="column">
-                    <b-datepicker size="is-small" v-model="date" 
-                        inline>
-                    </b-datepicker>
+                <b-datepicker size="is-small" v-model="date" 
+                    inline>
+                </b-datepicker>
             </div>
             <!-- -->
             <!-- AUTOCOMPLETE SELECT -->
@@ -28,9 +28,9 @@
                             </template>
                             <template slot="empty">No results for {{foodName}}</template>
                         </b-autocomplete>
-                        <!-- -->
-                    <!-- CLOCK PICKER -->
                     </b-field>
+                    <!-- -->
+                    <!-- CLOCK PICKER -->
                     <b-field label="Select time">
                         <b-clockpicker
                             rounded
@@ -52,7 +52,7 @@
                             </button>
                         </b-clockpicker>
                     </b-field>
-                    <b-button type="is-primary">Add to my day</b-button>
+                    <button class="button is-primary" @click="addToDay">Add to my day</button>
                 </section>
             </div>
             <!-- -->
@@ -60,7 +60,10 @@
             <div class="column">
                 <b-tabs v-model="activeTab">
                     <b-tab-item label="What did you eat ?">
-                    Lorem ipsum dolor sit amet.
+                        <div v-for="item in day" :key="item.id"> 
+                            {{item.name}}
+                            <a @click="deleteDayItem(item)" class="delete is-small"></a>
+                        </div>
                     </b-tab-item>
 
                     <b-tab-item label="Saved food">
@@ -90,6 +93,7 @@ export default {
     name: 'Day',
     created() {
         this.getFoods();
+        localStorage.dayItem? this.day = (JSON.parse(localStorage.dayItem)):null
     },
     data() {
         return {
@@ -116,6 +120,8 @@ export default {
                 createdAt: new Date(),
             })
         },
+        // ADD DAY TO FIREBASE WIP
+
         // GET FOOD ITEMS FROM FIREBASE
         async getFoods() {
             var foodsRef = await firebase
@@ -150,6 +156,17 @@ export default {
                     }
                 })
             },
+            //ADD FOOD AND TIME TO DAY ARRAY
+            addToDay() {
+                let foodAndTimeObj = {name:this.selected.name, id:this.selected.id, time:this.time}
+                this.day.push(foodAndTimeObj);
+                localStorage.dayItem = JSON.stringify(this.day);
+            },
+            //DELETE DAY ITEM / UPDATE LOCAL STORAGE
+            deleteDayItem(item) {
+                this.day.splice(this.day.indexOf(item), 1);
+                localStorage.dayItem = JSON.stringify(this.day);
+            }
         },
 
     computed: {
@@ -173,5 +190,11 @@ export default {
 
 .control {
     text-align: center;
+}
+
+.smallBtn
+{
+    width: 10%;
+    height: 10%;
 }
 </style>
