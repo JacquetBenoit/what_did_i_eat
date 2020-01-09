@@ -3,7 +3,7 @@
         <!-- DATE PICKER -->
         <div class="columns is-centered">
             <div class="column">
-                <b-datepicker size="is-small" v-model="date" 
+                <b-datepicker size="is-small" v-model="date"
                     inline>
                 </b-datepicker>
             </div>
@@ -73,14 +73,15 @@
                 <!-- -->
                 <!-- FEELING SELECT :'( -->
                 <b-field class="has-text-centered" label="How do you feel today ?">
-                    <b-select placeholder=":()" rounded>
+                    <b-select v-model="feeling" placeholder=":()" rounded>
                         <option value="good">Good :)</option>
                         <option value="ok">Ok :|</option>
                         <option value="bad">Bad :(</option>
                     </b-select>
                 </b-field>
                 <!-- -->
-                <b-button type="is-primary">Save day</b-button>                  
+                <b-button v-if="!saved" @click="addDay" type="is-primary">Save day</b-button>
+                <b-button v-if="saved" type="">Day is saved</b-button>            
             </div>
         </div>  
     </div>
@@ -93,7 +94,10 @@ export default {
     name: 'Day',
     created() {
         this.getFoods();
-        localStorage.dayItem? this.day = (JSON.parse(localStorage.dayItem)):null
+        this.getDays();
+        this.date.setHours(0,0,0,0);
+        localStorage.dayItem? this.day = (JSON.parse(localStorage.dayItem)):null;
+        // this.updateDayIfExisting();
     },
     data() {
         return {
@@ -104,9 +108,17 @@ export default {
             day: [],
             days: [],
             time: new Date(),
+            feeling: '',
+            saved: false,
 
         }
     },
+    watch: {
+        date: function(){
+            this.updateDayIfExisting();
+        }
+
+        },
     methods: {
         // ADD FOOD ITEM TO FIREBASE
         addFood() {
@@ -121,6 +133,23 @@ export default {
             })
         },
         // ADD DAY TO FIREBASE WIP
+        addDay() {
+            if (!this.saved){
+                firebase
+                .firestore()
+                .collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("day")
+                .add({
+                    foods: this.day,
+                    feeling: this.feeling,
+                    date: this.date.toString(),
+                    saved: true
+                })
+                this.saved = true;
+            }
+            this.getDays();
+        },
 
         // GET FOOD ITEMS FROM FIREBASE
         async getFoods() {
@@ -136,6 +165,23 @@ export default {
                     var food = doc.data();
                     food.id = doc.id;
                     this.foods.push(food);
+                })
+            })
+        },
+        // Get Days
+        async getDays() {
+            var dayRef = await firebase
+                .firestore()
+                .collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("day");
+
+            dayRef.onSnapshot(snap => {
+                this.days = [];
+                snap.forEach(doc => {
+                    var day = doc.data();
+                    day.id = doc.id;
+                    this.days.push(day);
                 })
             })
         },
@@ -166,6 +212,21 @@ export default {
             deleteDayItem(item) {
                 this.day.splice(this.day.indexOf(item), 1);
                 localStorage.dayItem = JSON.stringify(this.day);
+            },
+            // TEMPORARY FIND EXISTING DAY
+            updateDayIfExisting() {
+                for (const item of this.days){
+                    if (this.date.toString() == item.date){
+                        this.day = item.foods;
+                        this.saved = item.saved;
+                        this.feeling = item.feeling;
+                        break;
+                } else {
+                    this.day = [];
+                    this.saved = false;
+                    this.feeling = '';
+                }
+            }
             }
         },
 
